@@ -14,30 +14,30 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product findProductById(List<Product> products, int searchId) {
-        for (Product product : products) {
-            if (product.getId() == searchId) {
-                return product;
-            }
-        }
-        return null;
+    public void addProduct(Product product) {
+        productRepository.addProduct(product);
     }
 
-    public void printAllProducts(List<Product> products) {
-        for (Product product : products) {
+    public void printAllProducts() {
+        for (Product product : productRepository.findAll()) {
             System.out.println(product);
         }
     }
 
-    public int calculateTotalQuantity(List<Product> products) {
+    public Product findProductById(int id) {
+        return productRepository.findById(id);
+    }
+
+    public int calculateTotalQuantity() {
         int total = 0;
-        for (Product product : products) {
+        for (Product product : productRepository.findAll()) {
             total += product.getQuantity();
         }
         return total;
     }
 
-    public Product findMostExpensiveProduct(List<Product> products) {
+    public Product findMostExpensiveProduct() {
+        List<Product> products = productRepository.findAll();
         if (products.isEmpty()) {
             return null;
         }
@@ -50,8 +50,8 @@ public class ProductService {
         return mostExpensiveProduct;
     }
 
-    public Product findProductByName(List<Product> products, String searchName) {
-        for (Product product : products) {
+    public Product findProductByName(String searchName) {
+        for (Product product : productRepository.findAll()) {
             if (product.getName().equals(searchName)) {
                 return product;
             }
@@ -59,9 +59,9 @@ public class ProductService {
         return null;
     }
 
-    public List<Product> findProductsWithLowStock(List<Product> products, int minimumRequiredQuantity) {
+    public List<Product> findProductsWithLowStock(int minimumRequiredQuantity) {
         List<Product> result = new ArrayList<>();
-        for (Product product : products) {
+        for (Product product : productRepository.findAll()) {
             if (product.getQuantity() < minimumRequiredQuantity) {
                 result.add(product);
             }
@@ -69,9 +69,9 @@ public class ProductService {
         return result;
     }
 
-    public List<Product> findProductsWithLowPrice(List<Product> products, float maxPrice) {
+    public List<Product> findProductsWithLowPrice(float maxPrice) {
         List<Product> result = new ArrayList<>();
-        for (Product product : products) {
+        for (Product product : productRepository.findAll()) {
             if (product.getPrice() < maxPrice) {
                 result.add(product);
             }
@@ -79,12 +79,8 @@ public class ProductService {
         return result;
     }
 
-    public void updateProductQuantity(Product product, int newQuantity) {
-        product.setQuantity(newQuantity);
-    }
-
-    public boolean updateProductQuantityById(List<Product> products, int id, int newQuantity) {
-        Product product = findProductById(products, id);
+    public boolean updateProductQuantityById(int id, int newQuantity) {
+        Product product = findProductById(id);
         if (product != null) {
             product.setQuantity(newQuantity);
             return true;
@@ -92,8 +88,8 @@ public class ProductService {
         return false;
     }
 
-    public boolean updateProductPriceById(List<Product> products, int id, float newPrice) {
-        Product product = findProductById(products, id);
+    public boolean updateProductPriceById(int id, float newPrice) {
+        Product product = findProductById(id);
         if (product != null) {
             product.setPrice(newPrice);
             return true;
@@ -101,8 +97,8 @@ public class ProductService {
         return false;
     }
 
-    public boolean updateProductNameById(List<Product> products, int id, String newName) {
-        Product product = findProductById(products, id);
+    public boolean updateProductNameById(int id, String newName) {
+        Product product = findProductById(id);
         if (product != null) {
             product.setName(newName);
             return true;
@@ -110,12 +106,7 @@ public class ProductService {
         return false;
     }
 
-    public boolean deleteProductById(List<Product> products, int id) {
-        Product product = findProductById(products, id);
-        if (product != null) {
-            products.remove(product);
-            return true;
-        }
-        return false;
+    public boolean deleteProductById(int id) {
+        return productRepository.deleteById(id);
     }
 }

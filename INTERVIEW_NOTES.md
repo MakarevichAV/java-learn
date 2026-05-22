@@ -24,6 +24,86 @@ A setter changes the value of a private field. Later, setters can also validate 
 
 `toString()` gives a readable text representation of an object, useful for debugging and logging.
 
+### Object Reference
+
+In Java, an object variable stores a reference to an object, not a full independent copy of that object.
+
+If a product is found inside a list and assigned to a variable, changing that product through the variable changes the same object that is still stored in the list.
+
+### `final` Field
+
+A `final` field can be assigned once.
+
+For example, `id` can be `final` because a product id should usually not change after the product is created.
+
+### Validation
+
+A model class should protect its own state.
+
+For example, `Product` validates:
+
+- `id` must be positive
+- `name` must not be `null` or blank
+- `quantity` must not be negative
+- `price` must not be negative
+
+### Service Layer
+
+`ProductService` contains business operations.
+
+Examples:
+
+- add product
+- find product
+- update product
+- delete product
+- calculate total quantity
+- filter products
+
+### Repository Layer
+
+`ProductRepository` is responsible for storing and retrieving products.
+
+In the current project it stores products in:
+
+```java
+private final List<Product> products = new ArrayList<>();
+```
+
+Later this idea maps to database access in real backend applications.
+
+### Constructor Injection
+
+`ProductService` receives `ProductRepository` through its constructor:
+
+```java
+public ProductService(ProductRepository productRepository) {
+    this.productRepository = productRepository;
+}
+```
+
+This means the service depends on the repository, but does not create it by itself.
+
+### Returning Internal Lists
+
+Returning an internal list directly can be dangerous:
+
+```java
+return products;
+```
+
+External code can then modify repository data directly:
+
+```java
+productRepository.findAll().clear();
+```
+
+A safer next step is returning a copy:
+
+```java
+return new ArrayList<>(products);
+```
+
 ## Questions To Practice
 
 - Why should fields usually be private?
@@ -31,3 +111,8 @@ A setter changes the value of a private field. Later, setters can also validate 
 - What is a constructor used for?
 - Why does every field in Java need a type?
 - What should `toString()` include?
+- Why can `id` be `final`?
+- Why should `Product` validate its own fields?
+- What is the responsibility of `ProductService`?
+- What is the responsibility of `ProductRepository`?
+- Why can returning an internal list directly be dangerous?

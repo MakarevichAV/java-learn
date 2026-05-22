@@ -6,25 +6,67 @@ Prepare for Junior/Student Java backend interviews by building a Warehouse Manag
 
 ## Current Step
 
-Create a `Product` class in package:
+Continue the Warehouse Management System with layered architecture:
 
 ```text
-com.sander.warehouse
+Main -> ProductService -> ProductRepository -> List<Product>
 ```
 
-The class should have:
+Current package structure:
 
-- private fields
-- constructor
-- getters and setters
-- `toString()`
+```text
+src/main/java/com/sander/warehouse/Main.java
+src/main/java/com/sander/warehouse/model/Product.java
+src/main/java/com/sander/warehouse/service/ProductService.java
+src/main/java/com/sander/warehouse/repository/ProductRepository.java
+```
 
-Fields:
+## Completed So Far
 
-- `id`
-- `name`
-- `quantity`
-- `price`
+- Created `Product` model with `id`, `name`, `quantity`, `price`
+- Added constructor, getters, setters, and `toString()`
+- Added validation for `id`, `name`, `quantity`, and `price`
+- Made `id` immutable with `final`
+- Practiced `List<Product>` and `ArrayList`
+- Added service methods for search, filtering, update, delete, and total quantity
+- Practiced object references by updating an object from a list
+- Created package structure: `model`, `service`, `repository`
+- Created `ProductRepository`
+- Moved storage responsibility into `ProductRepository`
+- Connected `ProductService` to `ProductRepository` using constructor injection
+- Changed `Main` to work mostly through `ProductService`
+
+## Current Topic
+
+Repository encapsulation.
+
+Current question:
+
+```text
+Why is returning the internal List<Product> from ProductRepository.findAll() dangerous?
+```
+
+Current answer:
+
+Returning the internal list exposes repository state. External code can modify the original list directly, for example by calling `clear()`, `add()`, or `remove()` without using repository methods.
+
+## Next Step
+
+Improve `ProductRepository.findAll()`.
+
+Instead of returning the internal list directly:
+
+```java
+return products;
+```
+
+learn to return a copy:
+
+```java
+return new ArrayList<>(products);
+```
+
+This protects the repository list itself from external structural changes.
 
 ## Topics To Cover Later
 
@@ -32,8 +74,12 @@ Fields:
 - encapsulation
 - constructors
 - collections
+- repository layer
+- service layer
+- dependency injection basics
 - `HashMap`
 - `equals()` and `hashCode()`
+- unit tests
 - design patterns
 - singleton
 - REST API
