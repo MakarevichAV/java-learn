@@ -171,6 +171,46 @@ Repository = simple storage and query operations
 Service = business logic, updates, calculations, and business naming
 ```
 
+### Case-Sensitive vs Case-Insensitive Search
+
+`equals()` compares strings exactly:
+
+```java
+product.getName().equals(name)
+```
+
+`equalsIgnoreCase()` compares strings without caring about letter case:
+
+```java
+product.getName().equalsIgnoreCase(name)
+```
+
+Example:
+
+```java
+"New Name".equalsIgnoreCase("new name")
+```
+
+returns `true`.
+
+This is useful when product search should be user-friendly.
+
+### Order of Operations
+
+The order of method calls matters.
+
+If `deleteProductById(1)` is called before `calculateTotalQuantity()`, then the total quantity is calculated after product `1` has already been removed.
+
+For clean demo code, separate output into sections:
+
+```text
+Before delete
+Service method results before delete
+After delete
+```
+
+This makes behavior easier to understand and explain in an interview.
+
 ## Questions To Practice
 
 - Why should fields usually be private?
@@ -186,3 +226,5 @@ Service = business logic, updates, calculations, and business naming
 - What is the difference between shallow copy and deep copy?
 - Why can service method names be different from repository method names?
 - Why is `findProductsWithLowStock` more business-oriented than `findByQuantityLessThan`?
+- What is the difference between `equals()` and `equalsIgnoreCase()`?
+- Why does the order of update/delete/read operations matter?

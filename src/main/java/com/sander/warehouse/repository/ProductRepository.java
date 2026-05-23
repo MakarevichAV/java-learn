@@ -36,7 +36,7 @@ public class ProductRepository {
 
     public Product findByName(String name) {
         for (Product product : products) {
-            if (product.getName().equals(name)) {
+            if (product.getName().equalsIgnoreCase(name)) {
                 return product;
             }
         }

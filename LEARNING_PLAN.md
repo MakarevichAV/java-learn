@@ -41,10 +41,12 @@ src/main/java/com/sander/warehouse/repository/ProductRepository.java
 - Moved simple query methods to `ProductRepository`
 - Kept business operations in `ProductService`
 - Practiced naming differences between repository query methods and service business methods
+- Called all current `ProductService` methods from `Main`
+- Added case-insensitive search by product name with `equalsIgnoreCase`
 
 ## Current Topic
 
-Repository/service responsibility and method naming.
+Repository/service responsibility and clean demo flow in `Main`.
 
 Current rule:
 
@@ -67,18 +69,39 @@ findBudgetProducts(float maxPrice)
 
 ## Next Step
 
-In `Main`, call the service methods:
+Clean and structure `Main` output.
+
+Current issue:
+
+Some read/calculation methods are called after:
 
 ```java
-System.out.println("Low stock products: " + productService.findProductsWithLowStock(30));
-System.out.println("Budget products: " + productService.findBudgetProducts(30.0F));
+productService.deleteProductById(1);
 ```
 
-Put these calls before delete, so the list is still complete.
+This means they run on the list after `Product1` has already been removed.
 
-After that, continue cleaning method names and responsibilities.
+Next task:
 
-Estimated progress: 35-40%.
+Use clear output sections:
+
+```java
+System.out.println("Before delete:");
+productService.printAllProducts();
+
+System.out.println("Service method results before delete:");
+// find by id, find by name, total quantity, most expensive, low stock, budget products
+
+boolean deleted = productService.deleteProductById(1);
+System.out.println("Deleted: " + deleted);
+
+System.out.println("After delete:");
+productService.printAllProducts();
+```
+
+After that, continue with cleaner service/repository responsibilities and possibly introduce tests.
+
+Estimated progress: about 40%.
 
 ## Topics To Cover Later
 

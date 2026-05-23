@@ -59,12 +59,12 @@ Main -> ProductService -> ProductRepository -> List<Product>
 
 ## Current Learning Position
 
-Estimated progress toward Student/Junior Java backend readiness through this project: about 35-40%.
+Estimated progress toward Student/Junior Java backend readiness through this project: about 40%.
 
 Current topic:
 
 ```text
-Repository/service responsibility and method naming
+Repository/service responsibility, service method usage, and demo flow in Main
 ```
 
 Recently completed:
@@ -74,6 +74,8 @@ Recently completed:
 - Moved simple query methods into `ProductRepository`
 - Kept business/operation methods in `ProductService`
 - Discussed repository-style method names vs service/business method names
+- Called all remaining `ProductService` methods from `Main`
+- Added case-insensitive product name search using `equalsIgnoreCase`
 
 Current naming rule:
 
@@ -82,7 +84,14 @@ Repository = technical query names, for example findByQuantityLessThan
 Service = business names, for example findProductsWithLowStock
 ```
 
-The next learning step is to call the business-named service filter methods from `Main` and review the output.
+Current code state:
+
+- `Main` creates `ProductRepository`
+- `Main` creates `ProductService` with constructor injection
+- `Main` adds products through `ProductService`
+- `Main` calls update, delete, print, find by id, find by name, total quantity, most expensive product, low stock, and budget product methods
+
+The next learning step is to clean the output/demo flow in `Main`: separate "before delete" and "after delete" operations so it is clear which methods work on the full list and which methods work after deletion.
 
 ## How The AI Agent Should Help
 

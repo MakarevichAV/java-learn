@@ -3,7 +3,6 @@ package com.sander.warehouse.service;
 import com.sander.warehouse.model.Product;
 import com.sander.warehouse.repository.ProductRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductService {

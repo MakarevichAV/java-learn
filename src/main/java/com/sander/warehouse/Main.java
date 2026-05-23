@@ -12,7 +12,7 @@ public class Main {
         productService.addProduct(new Product(1, "Product1", 10, 19.99F));
         productService.addProduct(new Product(2, "Product2", 20, 29.99F));
         productService.addProduct(new Product(3, "Product3", 30, 39.99F));
-        
+
         boolean quantityUpdated = productService.updateProductQuantityById(2, 50);
         boolean nameUpdated = productService.updateProductNameById(2, "New Name");
         boolean priceUpdated = productService.updateProductPriceById(3, 49.99F);
@@ -26,5 +26,12 @@ public class Main {
         System.out.println("Deleted: " + deleted);
 
         productService.printAllProducts();
+
+        System.out.println("Product by ID: " + productService.findProductById(2));
+        System.out.println("Most expensive product: " + productService.findMostExpensiveProduct());
+        System.out.println("Total quantity: " + productService.calculateTotalQuantity());
+        System.out.println("Products with low stock: " + productService.findProductsWithLowStock(31));
+        System.out.println("Budget products: " + productService.findBudgetProducts(50));
+        System.out.println("Product by name: " + productService.findProductByName("new name"));
     }
 }
