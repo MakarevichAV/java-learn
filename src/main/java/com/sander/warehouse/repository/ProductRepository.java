@@ -13,7 +13,7 @@ public class ProductRepository {
     }
 
     public List<Product> findAll() {
-        return products;
+        return new ArrayList<>(products);
     }
 
     public Product findById(int id) {
@@ -32,5 +32,34 @@ public class ProductRepository {
             return true;
         }
         return false;
+    }
+
+    public Product findByName(String name) {
+        for (Product product : products) {
+            if (product.getName().equals(name)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public List<Product> findByQuantityLessThan(int minRequiredQuantity) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getQuantity() < minRequiredQuantity) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
+
+    public List<Product> findByPriceLessThan(float maxPrice) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getPrice() < maxPrice) {
+                result.add(product);
+            }
+        }
+        return result;
     }
 }

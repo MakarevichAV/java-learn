@@ -35,38 +35,50 @@ src/main/java/com/sander/warehouse/repository/ProductRepository.java
 - Moved storage responsibility into `ProductRepository`
 - Connected `ProductService` to `ProductRepository` using constructor injection
 - Changed `Main` to work mostly through `ProductService`
+- Changed `ProductRepository.findAll()` to return a shallow copy
+- Practiced repository encapsulation
+- Discussed shallow copy vs deep copy
+- Moved simple query methods to `ProductRepository`
+- Kept business operations in `ProductService`
+- Practiced naming differences between repository query methods and service business methods
 
 ## Current Topic
 
-Repository encapsulation.
+Repository/service responsibility and method naming.
 
-Current question:
+Current rule:
 
 ```text
-Why is returning the internal List<Product> from ProductRepository.findAll() dangerous?
+Repository = technical data/query operations
+Service = business operations and business language
 ```
 
-Current answer:
+Examples:
 
-Returning the internal list exposes repository state. External code can modify the original list directly, for example by calling `clear()`, `add()`, or `remove()` without using repository methods.
+```java
+// Repository
+findByQuantityLessThan(int quantity)
+findByPriceLessThan(float price)
+
+// Service
+findProductsWithLowStock(int minimumRequiredQuantity)
+findBudgetProducts(float maxPrice)
+```
 
 ## Next Step
 
-Improve `ProductRepository.findAll()`.
-
-Instead of returning the internal list directly:
+In `Main`, call the service methods:
 
 ```java
-return products;
+System.out.println("Low stock products: " + productService.findProductsWithLowStock(30));
+System.out.println("Budget products: " + productService.findBudgetProducts(30.0F));
 ```
 
-learn to return a copy:
+Put these calls before delete, so the list is still complete.
 
-```java
-return new ArrayList<>(products);
-```
+After that, continue cleaning method names and responsibilities.
 
-This protects the repository list itself from external structural changes.
+Estimated progress: 35-40%.
 
 ## Topics To Cover Later
 

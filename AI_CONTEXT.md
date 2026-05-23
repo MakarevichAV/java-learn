@@ -59,16 +59,30 @@ Main -> ProductService -> ProductRepository -> List<Product>
 
 ## Current Learning Position
 
-Estimated progress toward Student/Junior Java backend readiness through this project: about 30-35%.
+Estimated progress toward Student/Junior Java backend readiness through this project: about 35-40%.
 
 Current topic:
 
 ```text
-Repository layer and encapsulation of stored data
+Repository/service responsibility and method naming
 ```
 
-The next learning step is to improve `ProductRepository.findAll()`.
-Right now it returns the internal list directly, which is useful for learning but unsafe because external code can modify repository data without using repository methods.
+Recently completed:
+
+- Improved `ProductRepository.findAll()` to return a shallow copy using `new ArrayList<>(products)`
+- Discussed shallow copy vs deep copy
+- Moved simple query methods into `ProductRepository`
+- Kept business/operation methods in `ProductService`
+- Discussed repository-style method names vs service/business method names
+
+Current naming rule:
+
+```text
+Repository = technical query names, for example findByQuantityLessThan
+Service = business names, for example findProductsWithLowStock
+```
+
+The next learning step is to call the business-named service filter methods from `Main` and review the output.
 
 ## How The AI Agent Should Help
 

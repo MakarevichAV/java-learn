@@ -104,6 +104,73 @@ A safer next step is returning a copy:
 return new ArrayList<>(products);
 ```
 
+This is a shallow copy: the list object is new, but the `Product` objects inside are the same objects.
+
+It protects the repository list from structural changes like `clear()`, `add()`, and `remove()` on the returned list.
+
+It does not protect the product objects themselves from mutation.
+
+### Shallow Copy
+
+A shallow copy copies the container, but not the objects inside it.
+
+Example:
+
+```java
+List<Product> copy = new ArrayList<>(products);
+```
+
+The `copy` list is a new list, but it contains references to the same `Product` objects.
+
+### Deep Copy
+
+A deep copy would also create new `Product` objects.
+
+This is more advanced and is not implemented yet in the project.
+
+### Repository Naming vs Service Naming
+
+Repository method names usually describe technical queries:
+
+```java
+findById
+findByName
+findByQuantityLessThan
+findByPriceLessThan
+```
+
+Service method names can describe business meaning:
+
+```java
+findProductsWithLowStock
+findBudgetProducts
+calculateTotalQuantity
+findMostExpensiveProduct
+```
+
+Example:
+
+```java
+findByQuantityLessThan(30)
+```
+
+means a technical condition: `quantity < 30`.
+
+```java
+findProductsWithLowStock(30)
+```
+
+means a warehouse business concept: products that may need restocking.
+
+### Responsibility Rule
+
+Current project rule:
+
+```text
+Repository = simple storage and query operations
+Service = business logic, updates, calculations, and business naming
+```
+
 ## Questions To Practice
 
 - Why should fields usually be private?
@@ -116,3 +183,6 @@ return new ArrayList<>(products);
 - What is the responsibility of `ProductService`?
 - What is the responsibility of `ProductRepository`?
 - Why can returning an internal list directly be dangerous?
+- What is the difference between shallow copy and deep copy?
+- Why can service method names be different from repository method names?
+- Why is `findProductsWithLowStock` more business-oriented than `findByQuantityLessThan`?
