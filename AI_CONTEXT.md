@@ -59,12 +59,12 @@ Main -> ProductService -> ProductRepository -> List<Product>
 
 ## Current Learning Position
 
-Estimated progress toward Student/Junior Java backend readiness through this project: about 48-50%.
+Estimated progress toward Student/Junior Java backend readiness through this project: about 55%.
 
 Current topic:
 
 ```text
-HashMap repository, Map interface, and duplicate id business rule
+JUnit tests, model validation tests, and preparation for equals/hashCode
 ```
 
 Recently completed:
@@ -94,6 +94,13 @@ Recently completed:
 - Discussed generics and why `Map<Integer, Product>` uses `Integer`, not `int`
 - Added `AddProductResult` enum with `ADDED` and `ALREADY_EXISTS`
 - Added duplicate id protection in `ProductService.addProduct`
+- Added Maven/JUnit Jupiter test setup
+- Created `ProductServiceTest`
+- Added service unit tests for add, duplicate id, update quantity, delete, find, filters, analytics, and empty repository
+- Created `ProductTest`
+- Added constructor and setter validation tests for `Product`
+- Discussed `assertEquals`, `assertThrows`, lambda syntax, `IllegalArgumentException.class`
+- Discussed comparing `float` values in tests with a delta
 
 Current naming rule:
 
@@ -113,8 +120,10 @@ Current code state:
 - `ProductService` returns data; `Main` decides how to print it
 - add method now returns `AddProductResult`: `ADDED` or `ALREADY_EXISTS`
 - repository storage is now `private final Map<Integer, Product> productMap = new HashMap<>()`
+- tests are under `src/test/java`
+- current testing framework is JUnit Jupiter
 
-The next learning step is to review `ProductRepository` and `ProductService` after the `HashMap` transition, then continue toward `equals()`/`hashCode()` and unit tests.
+The next learning step is to continue from unit tests toward `equals()` and `hashCode()`, and then clean up `Main` now that behavior is covered by tests.
 
 ## How The AI Agent Should Help
 

@@ -451,6 +451,122 @@ This caused a sync problem: deleting from one structure but not the other create
 
 Current repository uses `Map<Integer, Product>` as the single source of truth.
 
+### Maven and JUnit
+
+Maven is a Java build and dependency management tool.
+
+`pom.xml` is similar in purpose to `package.json` in JavaScript projects.
+
+JUnit Jupiter is used for unit tests.
+
+Tests live under:
+
+```text
+src/test/java
+```
+
+### Unit Test Structure
+
+Common test structure:
+
+```text
+Arrange = prepare objects and data
+Act = call the method being tested
+Assert = check the result
+```
+
+Example:
+
+```java
+Product product = new Product(1, "Product1", 10, 19.99F);
+
+AddProductResult result = productService.addProduct(product);
+
+assertEquals(AddProductResult.ADDED, result);
+```
+
+### `@BeforeEach`
+
+`@BeforeEach` runs before every test method.
+
+It is used to create fresh test state:
+
+```java
+@BeforeEach
+void setUp() {
+    productRepository = new ProductRepository();
+    productService = new ProductService(productRepository);
+}
+```
+
+This prevents tests from affecting each other.
+
+### `assertEquals`
+
+`assertEquals(expected, actual)` checks that expected and actual values are equal.
+
+Example:
+
+```java
+assertEquals(AddProductResult.ADDED, result);
+```
+
+The usual argument order is:
+
+```text
+expected first, actual second
+```
+
+### `assertThrows`
+
+`assertThrows` checks that code throws the expected exception type.
+
+Example:
+
+```java
+assertThrows(IllegalArgumentException.class, () -> {
+    new Product(0, "Product1", 10, 19.99F);
+});
+```
+
+`IllegalArgumentException.class` is the expected exception type.
+
+The lambda is code that JUnit executes during the assertion.
+
+### Lambda
+
+A lambda is a piece of code that can be passed as a value and executed later.
+
+Java:
+
+```java
+() -> {
+    new Product(0, "Product1", 10, 19.99F);
+}
+```
+
+This is similar to JavaScript arrow functions:
+
+```js
+() => {
+  // code
+}
+```
+
+### Floating Point Comparison
+
+`float` and `double` values can have small precision errors.
+
+In tests, compare them with a delta:
+
+```java
+assertEquals(19.99F, actualPrice, 0.001F);
+```
+
+The third argument is the allowed difference between expected and actual values.
+
+For money in real projects, `BigDecimal` is usually better than `float`.
+
 ## Questions To Practice
 
 - Why should fields usually be private?
@@ -482,3 +598,13 @@ Current repository uses `Map<Integer, Product>` as the single source of truth.
 - Why is it useful to declare a variable as `Map` instead of `HashMap`?
 - Why can duplicate storage in both `List` and `Map` cause bugs?
 - Why does `HashMap.put()` need a business rule in service to prevent duplicate ids?
+- What is Maven used for?
+- What is JUnit used for?
+- What are Arrange, Act, and Assert?
+- Why does `@BeforeEach` create fresh objects for every test?
+- What does `assertEquals(expected, actual)` check?
+- What does `assertThrows` check?
+- Why does `assertThrows` receive `IllegalArgumentException.class`?
+- What is a lambda?
+- Why do `float` and `double` tests often use a delta?
+- Why is `BigDecimal` usually better than `float` for money?

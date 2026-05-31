@@ -58,10 +58,16 @@ src/main/java/com/sander/warehouse/repository/ProductRepository.java
 - Made `Map<Integer, Product>` the single source of truth in `ProductRepository`
 - Added duplicate id protection through `AddProductResult`
 - Discussed `HashMap`, `LinkedHashMap`, `Map` interface, generics, and wrapper types
+- Added JUnit Jupiter to Maven
+- Created `ProductServiceTest`
+- Added unit tests for add, duplicate id, update quantity, delete, find, filters, analytics, and empty repository
+- Created `ProductTest`
+- Added validation tests for `Product` constructor and setters
+- Discussed `assertEquals`, `assertThrows`, lambda syntax, exception class references, and float delta
 
 ## Current Topic
 
-HashMap repository and duplicate id business rule.
+JUnit testing and preparation for `equals()` / `hashCode()`.
 
 Current rule:
 
@@ -131,24 +137,50 @@ Integer = product id key
 Product = stored product value
 ```
 
-## Next Step
-
-Review the current `HashMap` repository design:
+Current test structure:
 
 ```text
-addProduct -> checks duplicate id in service
-findById -> productMap.get(id)
-deleteById -> productMap.remove(id)
-findAll -> new ArrayList<>(productMap.values())
+src/test/java/com/sander/warehouse/service/ProductServiceTest.java
+src/test/java/com/sander/warehouse/model/ProductTest.java
 ```
 
-Then continue toward:
+Current test coverage:
 
-- `equals()` and `hashCode()`
-- unit tests for service/repository behavior
-- replacing demo checks in `Main` with real tests
+```text
+ProductService:
+- add product
+- duplicate id
+- update quantity
+- delete
+- find by id/name
+- filters
+- total quantity
+- most expensive product
+- empty repository
 
-Estimated progress: about 48-50%.
+Product:
+- valid constructor
+- invalid constructor values
+- invalid setter values
+```
+
+## Next Step
+
+Continue toward:
+
+```text
+equals() and hashCode()
+```
+
+Planned next learning path:
+
+1. Explain why Java objects need `equals()` and `hashCode()`
+2. Add focused tests that show default object comparison behavior
+3. Implement `equals()` and `hashCode()` in `Product`
+4. Discuss how `HashMap` and `HashSet` use `hashCode()` and `equals()`
+5. Clean up `Main`, because most behavior is now covered by tests
+
+Estimated progress: about 55%.
 
 ## Topics To Cover Later
 
