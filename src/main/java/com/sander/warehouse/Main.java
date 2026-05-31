@@ -24,6 +24,9 @@ public class Main {
         UpdateResult sameNameUpdateResult = productService.updateProductNameById(2, "new name");
         System.out.println("Same name update result: " + sameNameUpdateResult);
 
+        UpdateResult missingProductUpdateResult = productService.updateProductQuantityById(44, 100);
+        System.out.println("Missing product update result: " + missingProductUpdateResult);
+
         System.out.println("Before delete:");
 
         printAllProducts(productService);
@@ -39,7 +42,12 @@ public class Main {
         DeleteResult deleteResult = productService.deleteProductById(1);
         System.out.println("Delete result: " + deleteResult);
 
+        DeleteResult secondDeleteResult = productService.deleteProductById(1);
+        System.out.println("Second delete result: " + secondDeleteResult);
+
         System.out.println("After delete:");
+
+        System.out.println("Deleted product by ID: " + productService.findProductById(1));
 
         printAllProducts(productService);
     }
