@@ -2,6 +2,9 @@ package com.sander.warehouse.service;
 
 import com.sander.warehouse.model.Product;
 import com.sander.warehouse.repository.ProductRepository;
+import com.sander.warehouse.result.AddProductResult;
+import com.sander.warehouse.result.DeleteResult;
+import com.sander.warehouse.result.UpdateResult;
 
 import java.util.List;
 
@@ -13,26 +16,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void addProduct(Product product) {
+    public AddProductResult addProduct(Product product) {
+        if (productRepository.findById(product.getId()) != null) {
+            return AddProductResult.ALREADY_EXISTS;
+        }
         productRepository.addProduct(product);
+        return AddProductResult.ADDED;
     }
 
-    public void printAllProducts() {
-        for (Product product : productRepository.findAll()) {
-            System.out.println(product);
-        }
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
     }
 
     public Product findProductById(int id) {
         return productRepository.findById(id);
     }
 
-    public int calculateTotalQuantity() {
-        int total = 0;
-        for (Product product : productRepository.findAll()) {
-            total += product.getQuantity();
-        }
-        return total;
+    public Product findProductByName(String searchName) {
+        return productRepository.findByName(searchName);
+    }
+
+    public List<Product> findProductsWithLowStock(int minRequiredQuantity) {
+        return productRepository.findByQuantityLessThan(minRequiredQuantity);
+    }
+
+    public List<Product> findBudgetProducts(float maxPrice) {
+        return productRepository.findByPriceLessThan(maxPrice);
     }
 
     public Product findMostExpensiveProduct() {
@@ -49,46 +58,52 @@ public class ProductService {
         return mostExpensiveProduct;
     }
 
-    public Product findProductByName(String searchName) {
-        return productRepository.findByName(searchName);
-    }
-
-    public List<Product> findProductsWithLowStock(int minRequiredQuantity) {
-        return productRepository.findByQuantityLessThan(minRequiredQuantity);
-    }
-
-    public List<Product> findBudgetProducts(float maxPrice) {
-        return productRepository.findByPriceLessThan(maxPrice);
-    }
-
-    public boolean updateProductQuantityById(int id, int newQuantity) {
-        Product product = productRepository.findById(id);
-        if (product != null) {
-            product.setQuantity(newQuantity);
-            return true;
+    public int calculateTotalQuantity() {
+        int total = 0;
+        for (Product product : productRepository.findAll()) {
+            total += product.getQuantity();
         }
-        return false;
+        return total;
     }
 
-    public boolean updateProductPriceById(int id, float newPrice) {
+    public UpdateResult updateProductQuantityById(int id, int newQuantity) {
         Product product = productRepository.findById(id);
-        if (product != null) {
-            product.setPrice(newPrice);
-            return true;
+        if (product == null) {
+            return UpdateResult.NOT_FOUND;
         }
-        return false;
+        if (product.getQuantity() == newQuantity) {
+            return UpdateResult.NO_CHANGE;
+        }
+        product.setQuantity(newQuantity);
+        return UpdateResult.UPDATED;
     }
 
-    public boolean updateProductNameById(int id, String newName) {
+    public UpdateResult updateProductPriceById(int id, float newPrice) {
         Product product = productRepository.findById(id);
-        if (product != null) {
-            product.setName(newName);
-            return true;
+        if (product == null) {
+            return UpdateResult.NOT_FOUND;
         }
-        return false;
+        if (product.getPrice() == newPrice) {
+            return UpdateResult.NO_CHANGE;
+        }
+        product.setPrice(newPrice);
+        return UpdateResult.UPDATED;
     }
 
-    public boolean deleteProductById(int id) {
-        return productRepository.deleteById(id);
+    public UpdateResult updateProductNameById(int id, String newName) {
+        Product product = productRepository.findById(id);
+        if (product == null) {
+            return UpdateResult.NOT_FOUND;
+        }
+        if (product.getName().equalsIgnoreCase(newName)) {
+            return UpdateResult.NO_CHANGE;
+        }
+        product.setName(newName);
+        return UpdateResult.UPDATED;
     }
+
+    public DeleteResult deleteProductById(int id) {
+        return productRepository.deleteById(id) ? DeleteResult.DELETED : DeleteResult.NOT_FOUND;
+    }
+
 }

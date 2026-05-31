@@ -3,39 +3,33 @@ package com.sander.warehouse.repository;
 import com.sander.warehouse.model.Product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductRepository {
-    private final List<Product> products = new ArrayList<>();
+
+    private final Map<Integer, Product> productMap = new HashMap<>();
 
     public void addProduct(Product product) {
-        products.add(product);
+        productMap.put(product.getId(), product);
     }
 
     public List<Product> findAll() {
-        return new ArrayList<>(products);
+        return new ArrayList<>(productMap.values());
     }
 
     public Product findById(int id) {
-        for (Product product : products) {
-            if (product.getId() == id) {
-                return product;
-            }
-        }
-        return null;
+        return productMap.get(id);
     }
 
     public boolean deleteById(int id) {
-        Product product = findById(id);
-        if (product != null) {
-            products.remove(product);
-            return true;
-        }
-        return false;
+        Product removedProduct = productMap.remove(id);
+        return removedProduct != null;
     }
 
     public Product findByName(String name) {
-        for (Product product : products) {
+        for (Product product : productMap.values()) {
             if (product.getName().equalsIgnoreCase(name)) {
                 return product;
             }
@@ -45,7 +39,7 @@ public class ProductRepository {
 
     public List<Product> findByQuantityLessThan(int minRequiredQuantity) {
         List<Product> result = new ArrayList<>();
-        for (Product product : products) {
+        for (Product product : productMap.values()) {
             if (product.getQuantity() < minRequiredQuantity) {
                 result.add(product);
             }
@@ -55,7 +49,7 @@ public class ProductRepository {
 
     public List<Product> findByPriceLessThan(float maxPrice) {
         List<Product> result = new ArrayList<>();
-        for (Product product : products) {
+        for (Product product : productMap.values()) {
             if (product.getPrice() < maxPrice) {
                 result.add(product);
             }

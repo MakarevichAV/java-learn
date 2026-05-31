@@ -211,6 +211,246 @@ After delete
 
 This makes behavior easier to understand and explain in an interview.
 
+### Enum
+
+An `enum` is a Java type for a fixed set of possible values.
+
+Example:
+
+```java
+public enum UpdateResult {
+    UPDATED,
+    NOT_FOUND,
+    NO_CHANGE
+}
+```
+
+A variable of type `UpdateResult` can only contain one of these defined values.
+
+This is safer than using strings because typos become compiler errors.
+
+### Boolean vs Enum Result
+
+A `boolean` result can be too vague.
+
+Example:
+
+```java
+false
+```
+
+could mean:
+
+- product was not found
+- value was the same
+- update failed for another reason
+
+An enum can communicate the exact result:
+
+```java
+UpdateResult.UPDATED
+UpdateResult.NOT_FOUND
+UpdateResult.NO_CHANGE
+```
+
+This makes service methods more informative.
+
+The project also has:
+
+```java
+public enum DeleteResult {
+    DELETED,
+    NOT_FOUND
+}
+```
+
+This makes delete results more explicit than returning only `true` or `false`.
+
+The project also has:
+
+```java
+public enum AddProductResult {
+    ADDED,
+    ALREADY_EXISTS
+}
+```
+
+This prevents duplicate product ids from being silently overwritten.
+
+### Guard Clause
+
+A guard clause exits a method early when work cannot continue.
+
+Example:
+
+```java
+if (product == null) {
+    return UpdateResult.NOT_FOUND;
+}
+
+if (product.getQuantity() == newQuantity) {
+    return UpdateResult.NO_CHANGE;
+}
+
+product.setQuantity(newQuantity);
+return UpdateResult.UPDATED;
+```
+
+This avoids deep nested `if` blocks and keeps the main successful path easy to read.
+
+### Service Should Not Print
+
+In real backend code, a service should usually not print to the console.
+
+The service should return data:
+
+```java
+public List<Product> findAllProducts()
+```
+
+The caller decides how to display it.
+
+In this project:
+
+```text
+ProductService = returns data and result values
+Main = prints output for demo purposes
+```
+
+This prepares for Spring Boot, where:
+
+```text
+Service = business logic
+Controller = HTTP input/output
+```
+
+### Private Static Helper in Main
+
+A helper method in `Main` can be:
+
+```java
+private static
+```
+
+`private` means it is only used inside `Main`.
+
+`static` means it can be called from the static `main` method without creating a `Main` object.
+
+### Map and HashMap
+
+`Map` is an interface for key-value storage.
+
+`HashMap` is a concrete implementation of `Map`.
+
+Example:
+
+```java
+private final Map<Integer, Product> productMap = new HashMap<>();
+```
+
+This means:
+
+```text
+Map<Integer, Product> = variable type / interface
+HashMap<> = concrete implementation
+Integer = key type
+Product = value type
+```
+
+The repository can find a product by id quickly:
+
+```java
+productMap.get(id)
+```
+
+### List vs Map
+
+`List<Product>` stores products by order/index.
+
+`Map<Integer, Product>` stores products by key-value pair.
+
+For this project:
+
+```text
+key = product id
+value = Product object
+```
+
+`List` search by id usually requires a loop.
+
+`Map` search by id uses the key directly.
+
+### HashMap vs LinkedHashMap
+
+`HashMap` does not guarantee insertion order.
+
+`LinkedHashMap` preserves insertion order.
+
+If order does not matter, `HashMap` is fine.
+
+If predictable output order matters, `LinkedHashMap` can be used while keeping the field type as `Map`.
+
+### Program To Interface
+
+Prefer:
+
+```java
+Map<Integer, Product> productMap = new HashMap<>();
+```
+
+instead of:
+
+```java
+HashMap<Integer, Product> productMap = new HashMap<>();
+```
+
+This lets the implementation change later:
+
+```java
+Map<Integer, Product> productMap = new LinkedHashMap<>();
+```
+
+without changing the rest of the code that only needs `Map` behavior.
+
+### Generics and Wrapper Types
+
+`Map<Integer, Product>` means:
+
+```text
+Integer = key type
+Product = value type
+```
+
+Java generics cannot use primitive types like `int`.
+
+Use wrapper types:
+
+```text
+int -> Integer
+float -> Float
+double -> Double
+boolean -> Boolean
+```
+
+Java can automatically convert `int` to `Integer`. This is called autoboxing.
+
+Java can automatically convert `Integer` back to `int`. This is called unboxing.
+
+### Single Source Of Truth
+
+Avoid storing the same data in two structures unless there is a strong reason.
+
+The repository briefly had both:
+
+```java
+List<Product> products
+Map<Integer, Product> productMap
+```
+
+This caused a sync problem: deleting from one structure but not the other creates bugs.
+
+Current repository uses `Map<Integer, Product>` as the single source of truth.
+
 ## Questions To Practice
 
 - Why should fields usually be private?
@@ -228,3 +468,17 @@ This makes behavior easier to understand and explain in an interview.
 - Why is `findProductsWithLowStock` more business-oriented than `findByQuantityLessThan`?
 - What is the difference between `equals()` and `equalsIgnoreCase()`?
 - Why does the order of update/delete/read operations matter?
+- What is an enum?
+- Why is enum better than String for fixed result values?
+- Why can boolean be too vague for update results?
+- What is a guard clause?
+- Why should service methods usually not print to the console?
+- Why can `Main` contain private static helper methods in a demo application?
+- What is the difference between returning data and printing data?
+- What is the difference between `List<Product>` and `Map<Integer, Product>`?
+- Why does `Map<Integer, Product>` use `Integer` instead of `int`?
+- What is autoboxing?
+- What is the difference between `Map` and `HashMap`?
+- Why is it useful to declare a variable as `Map` instead of `HashMap`?
+- Why can duplicate storage in both `List` and `Map` cause bugs?
+- Why does `HashMap.put()` need a business rule in service to prevent duplicate ids?

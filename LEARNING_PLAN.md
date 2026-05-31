@@ -43,10 +43,25 @@ src/main/java/com/sander/warehouse/repository/ProductRepository.java
 - Practiced naming differences between repository query methods and service business methods
 - Called all current `ProductService` methods from `Main`
 - Added case-insensitive search by product name with `equalsIgnoreCase`
+- Cleaned `Main` output into clear sections
+- Added `UpdateResult` enum
+- Replaced ambiguous boolean update results with `UpdateResult`
+- Practiced guard clauses in update methods
+- Added `DeleteResult` enum
+- Changed delete operation to return `DeleteResult`
+- Added `findAllProducts()` to `ProductService`
+- Removed console printing from `ProductService`
+- Moved product printing responsibility to `Main`
+- Added private static helper method in `Main` for printing products
+- Extracted demo product setup into `addDemoProducts(ProductService productService)`
+- Replaced repository `List<Product>` storage with `Map<Integer, Product>`
+- Made `Map<Integer, Product>` the single source of truth in `ProductRepository`
+- Added duplicate id protection through `AddProductResult`
+- Discussed `HashMap`, `LinkedHashMap`, `Map` interface, generics, and wrapper types
 
 ## Current Topic
 
-Repository/service responsibility and clean demo flow in `Main`.
+HashMap repository and duplicate id business rule.
 
 Current rule:
 
@@ -67,41 +82,73 @@ findProductsWithLowStock(int minimumRequiredQuantity)
 findBudgetProducts(float maxPrice)
 ```
 
+## Current State
+
+Current result enums:
+
+```java
+public enum UpdateResult {
+    UPDATED,
+    NOT_FOUND,
+    NO_CHANGE
+}
+
+public enum DeleteResult {
+    DELETED,
+    NOT_FOUND
+}
+
+public enum AddProductResult {
+    ADDED,
+    ALREADY_EXISTS
+}
+```
+
+Current service responsibility:
+
+```text
+ProductService returns data and result values.
+Main decides how to print output.
+```
+
+`ProductService` now has:
+
+```java
+public List<Product> findAllProducts()
+```
+
+Current repository storage:
+
+```java
+private final Map<Integer, Product> productMap = new HashMap<>();
+```
+
+Current repository idea:
+
+```text
+Map<Integer, Product> = storage
+Integer = product id key
+Product = stored product value
+```
+
 ## Next Step
 
-Clean and structure `Main` output.
+Review the current `HashMap` repository design:
 
-Current issue:
-
-Some read/calculation methods are called after:
-
-```java
-productService.deleteProductById(1);
+```text
+addProduct -> checks duplicate id in service
+findById -> productMap.get(id)
+deleteById -> productMap.remove(id)
+findAll -> new ArrayList<>(productMap.values())
 ```
 
-This means they run on the list after `Product1` has already been removed.
+Then continue toward:
 
-Next task:
+- `equals()` and `hashCode()`
+- unit tests for service/repository behavior
+- replacing demo checks in `Main` with real tests
 
-Use clear output sections:
-
-```java
-System.out.println("Before delete:");
-productService.printAllProducts();
-
-System.out.println("Service method results before delete:");
-// find by id, find by name, total quantity, most expensive, low stock, budget products
-
-boolean deleted = productService.deleteProductById(1);
-System.out.println("Deleted: " + deleted);
-
-System.out.println("After delete:");
-productService.printAllProducts();
-```
-
-After that, continue with cleaner service/repository responsibilities and possibly introduce tests.
-
-Estimated progress: about 40%.
+Estimated progress: about 48-50%.
 
 ## Topics To Cover Later
 

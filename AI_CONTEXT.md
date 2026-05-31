@@ -59,12 +59,12 @@ Main -> ProductService -> ProductRepository -> List<Product>
 
 ## Current Learning Position
 
-Estimated progress toward Student/Junior Java backend readiness through this project: about 40%.
+Estimated progress toward Student/Junior Java backend readiness through this project: about 48-50%.
 
 Current topic:
 
 ```text
-Repository/service responsibility, service method usage, and demo flow in Main
+HashMap repository, Map interface, and duplicate id business rule
 ```
 
 Recently completed:
@@ -76,6 +76,24 @@ Recently completed:
 - Discussed repository-style method names vs service/business method names
 - Called all remaining `ProductService` methods from `Main`
 - Added case-insensitive product name search using `equalsIgnoreCase`
+- Cleaned `Main` output into before/delete/after sections
+- Added `UpdateResult` enum in `com.sander.warehouse.result`
+- Replaced boolean update results with `UpdateResult` for quantity, price, and name updates
+- Practiced guard clauses in update methods
+- Added `DeleteResult` enum with `DELETED` and `NOT_FOUND`
+- Changed `deleteProductById` to return `DeleteResult`
+- Added `findAllProducts()` to `ProductService`
+- Removed console output responsibility from `ProductService`
+- Replaced `printAllProducts()` service method with `Main` output logic
+- Added a private static helper method in `Main` for printing products
+- Extracted demo product setup into `addDemoProducts(ProductService productService)`
+- Changed `ProductRepository` from `List<Product>` storage to `Map<Integer, Product>` storage
+- `ProductRepository.findAll()` now returns `new ArrayList<>(productMap.values())`
+- Discussed `HashMap` vs `LinkedHashMap`
+- Discussed `Map` interface vs `HashMap` implementation
+- Discussed generics and why `Map<Integer, Product>` uses `Integer`, not `int`
+- Added `AddProductResult` enum with `ADDED` and `ALREADY_EXISTS`
+- Added duplicate id protection in `ProductService.addProduct`
 
 Current naming rule:
 
@@ -90,8 +108,13 @@ Current code state:
 - `Main` creates `ProductService` with constructor injection
 - `Main` adds products through `ProductService`
 - `Main` calls update, delete, print, find by id, find by name, total quantity, most expensive product, low stock, and budget product methods
+- update methods now return `UpdateResult`: `UPDATED`, `NOT_FOUND`, or `NO_CHANGE`
+- delete method now returns `DeleteResult`: `DELETED` or `NOT_FOUND`
+- `ProductService` returns data; `Main` decides how to print it
+- add method now returns `AddProductResult`: `ADDED` or `ALREADY_EXISTS`
+- repository storage is now `private final Map<Integer, Product> productMap = new HashMap<>()`
 
-The next learning step is to clean the output/demo flow in `Main`: separate "before delete" and "after delete" operations so it is clear which methods work on the full list and which methods work after deletion.
+The next learning step is to review `ProductRepository` and `ProductService` after the `HashMap` transition, then continue toward `equals()`/`hashCode()` and unit tests.
 
 ## How The AI Agent Should Help
 
